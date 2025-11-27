@@ -4,6 +4,8 @@ import pt.iscte.poo.game.Room;
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
 
+//Testing
+
 public class BigFish extends GameCharacter {
 	
 	private static BigFish bf = new BigFish(null);
