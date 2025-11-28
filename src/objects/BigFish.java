@@ -1,10 +1,9 @@
 package objects;
 
+import java.util.List;
 import pt.iscte.poo.game.Room;
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
-
-//Testing
 
 public class BigFish extends GameCharacter {
 	
@@ -48,6 +47,11 @@ public class BigFish extends GameCharacter {
 		if (isExit(destination)){ 
 			changeHasWon();
 			return sendToDestination(destination);
+		}
+
+		List<GameObject> checkForHole = getObjectsAt(destination);
+		for (GameObject object : checkForHole){
+			if (object.getWeight() == Weight.HOLE){return getPosition();}
 		}
 
 		GameObject firstObj = getTopObj(destination);
