@@ -15,6 +15,7 @@ import objects.SteelHorizontal;
 import objects.SteelVertical;
 import objects.GameObject;
 import objects.HoledWall;
+import objects.Krab;
 import objects.SmallFish;
 import objects.Trunk;
 import objects.Trap;
@@ -189,6 +190,13 @@ public class Room {
 							buoy.setPosition(x, y);
 							r.addObject(buoy);
 							r.setMObjects(buoy);
+							break;
+
+						case 'K':
+							MovableObjects krab = new Krab(r);
+							krab.setPosition(x, y);
+							r.addObject(krab);
+							r.setMObjects(krab);
 							break;
 					}
 				}
