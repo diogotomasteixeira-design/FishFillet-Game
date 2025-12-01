@@ -56,8 +56,10 @@ public class SmallFish extends GameCharacter {
 
 		if (object.getWeight() != Weight.LIGHT){return getPosition();}
 
-		Point2D dirObj = sub(destination, getPosition());
-    Point2D nextPos = add(object.getPosition(), dirObj);
+		if ("buoy".equals(object.getName()) && direction.getY() != 0){return getPosition();}
+
+		Vector2D dirObj = sub(destination, getPosition());
+    Point2D nextPos = object.getPosition().plus(dirObj);
 		boolean nextIsBlocking = false;
     
     for (GameObject obj : room.getObjectsAtPosition(nextPos)) {

@@ -3,6 +3,7 @@ package objects;
 import java.util.List;
 import pt.iscte.poo.game.Room;
 import pt.iscte.poo.utils.Point2D;
+import pt.iscte.poo.utils.Vector2D;
 
 public class Anchor extends MovableObjects {
 
@@ -22,7 +23,7 @@ public class Anchor extends MovableObjects {
 	}
 
 	@Override
-  public boolean tryPushChain(Point2D objPosition, Point2D direction) {
+  public boolean tryPushChain(Point2D objPosition, Vector2D direction) {
     Point2D destination = add(objPosition, direction);
     List<GameObject> objectsAtDest = getObjectsAt(destination);
 

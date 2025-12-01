@@ -20,6 +20,7 @@ import objects.Trunk;
 import objects.Trap;
 import objects.Stone;
 import objects.Bomb;
+import objects.Buoy;
 import pt.iscte.poo.utils.Point2D;
 import objects.MovableObjects;
 
@@ -181,6 +182,13 @@ public class Room {
 							cup.setPosition(x, y);
 							r.addObject(cup);
 							r.setMObjects(cup);
+							break;
+
+						case 'O':
+							MovableObjects buoy = new Buoy(r);
+							buoy.setPosition(x, y);
+							r.addObject(buoy);
+							r.setMObjects(buoy);
 							break;
 					}
 				}

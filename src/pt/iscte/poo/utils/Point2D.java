@@ -158,4 +158,8 @@ public class Point2D implements Serializable { // Added 23-Apr-2018
 	public Point2D plus(Dimension d) {
 		return new Point2D(x + d.width, y + d.height);
 	}
+
+	public Point2D minus(Dimension d) {
+		return new Point2D(x - d.width, y - d.height);
+	}
 }

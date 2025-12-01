@@ -44,6 +44,10 @@ public class Vector2D implements Serializable {
 		return new Vector2D(getX() + v.getX(), getY() + v.getY());
 	}
 
+	public Vector2D minus(Vector2D v) {
+		return new Vector2D(getX() - v.getX(), getY() - v.getY());
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

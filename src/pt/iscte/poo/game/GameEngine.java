@@ -96,7 +96,7 @@ public class GameEngine implements Observer {
 			return;
 		}
 		
-		if (lastTickProcessed % 10 == 0){gravity();}
+		if (lastTickProcessed % 10 == 0){MovableObjects.gravity(currentRoom);}
 
 
 		if (pendingMovement == null){return;}
@@ -179,86 +179,7 @@ public class GameEngine implements Observer {
 
 	}
 
-	public void gravity() {
 
-    int fallingLightOnSmall = 0;
-    int fallingHeavyOnSmall = 0;
-    int fallingHeavyOnBig = 0;
-
-    for (int line = 9; line >= 0; line--) {
-        for (int column = 0; column <= 9; column++) {
-
-          Point2D position = new Point2D(column, line);
-          List<GameObject> obj = currentRoom.getObjectsAtPosition(position);
-
-          for (GameObject object : obj) {
-
-            if (!(object instanceof MovableObjects mo)){continue;}
-
-              int lightCount = 0;
-              int heavyCount = 0;
-
-              Point2D scan = position;
-
-              while (true) {
-
-                GameObject top = currentRoom.getTopObj(scan);
-                if (top == null || !(top instanceof MovableObjects moStack)){break;}
-
-                if (moStack.getWeight() == Weight.LIGHT){lightCount++;}
-                if (moStack.getWeight() == Weight.HEAVY){heavyCount++;}
-                  
-								scan = new Point2D(scan.getX(), scan.getY() - 1);
-
-                if (scan.getY() < 0){break;}
-              }
-
-              Point2D destination = new Point2D(column, line + 1);
-              List<GameObject> belowObj = currentRoom.getObjectsAtPosition(destination);
-
-              for (GameObject below : belowObj) {
-
-                boolean protectedHoleOrTrap = false;
-
-                if (below instanceof SmallFish) {
-                  GameObject topBelow = currentRoom.getTopObj(destination);
-                  if (topBelow != null && (topBelow.getWeight() == Weight.HOLE || topBelow.getWeight() == Weight.TRAP)) {
-                    protectedHoleOrTrap = true;
-                  }
-                }
-
-                if ( below instanceof SmallFish && !protectedHoleOrTrap) {
-                  fallingLightOnSmall += lightCount;
-                  fallingHeavyOnSmall += heavyCount;
-                }
-
-                if (below instanceof BigFish) {fallingHeavyOnBig += heavyCount;}
-              }
-
-							boolean pushed = mo.push(position, new Point2D(0, 1));
-
-							if (pushed && mo instanceof Bomb bo) {
-
-								GameObject landedOn = currentRoom.getTopObj(destination.plus(new Vector2D(0,1)));
-
-
-								if (landedOn != null && !(landedOn instanceof SmallFish) && !(landedOn instanceof BigFish) && landedOn.getWeight() != Weight.WATER) {
-											bo.explode();
-											System.out.println("boom!");
-									}
-							}
-            }
-        }
-    }
-
-    if (fallingLightOnSmall >= 2 || fallingHeavyOnSmall >= 1) {
-        SmallFish.getInstance().kill();
-    }
-
-    if (fallingHeavyOnBig > 1) {
-        BigFish.getInstance().kill();
-    }
-	}
 
 	public String getTime(){
 		int totalSec = lastTickProcessed/10;
