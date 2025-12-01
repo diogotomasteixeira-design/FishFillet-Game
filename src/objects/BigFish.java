@@ -69,7 +69,7 @@ public class BigFish extends GameCharacter {
 		if (firstObj.getWeight() != Weight.LIGHT && firstObj.getWeight() != Weight.HEAVY){return getPosition();}
 
 		int numHeavyPushed = 0;
-		Point2D dirObj = sub(destination, getPosition());
+		Vector2D dirObj = sub(destination, getPosition());
 		Point2D checkPos = destination;
 		int objectsMoved = 0;
     

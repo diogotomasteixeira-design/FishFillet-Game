@@ -4,6 +4,7 @@ import java.util.List;
 import pt.iscte.poo.game.Room;
 import pt.iscte.poo.gui.ImageTile;
 import pt.iscte.poo.utils.Point2D;
+import pt.iscte.poo.utils.Vector2D;
 
 public abstract class GameObject implements ImageTile{
 	
@@ -72,11 +73,11 @@ public abstract class GameObject implements ImageTile{
 		return destination.getX() == -1 || destination.getX() == 10 || destination.getY() == -1 || destination.getY() == 10;
 	}
 
-	public boolean tryPushChain(Point2D objPosition, Point2D destination) {
+	public boolean tryPushChain(Point2D objPosition, Vector2D direction) {
     return false;
   }
 
-	public boolean push(Point2D destination, Point2D direction){
+	public boolean push(Point2D destination, Vector2D direction){
     setPosition(destination);
 		return true;
   }
@@ -88,11 +89,11 @@ public abstract class GameObject implements ImageTile{
         return false;
 			}
     }
-  	return true;
+		return true;
 	}
 
-	public Point2D sub(Point2D obj, Point2D fish){
-		Point2D destination = new Point2D(obj.getX()-fish.getX(),obj.getY()-fish.getY());
+	public Vector2D sub(Point2D obj, Point2D fish){
+		Vector2D destination = new Vector2D(obj.getX()-fish.getX(),obj.getY()-fish.getY());
 		return destination;
 	}
 
@@ -100,6 +101,15 @@ public abstract class GameObject implements ImageTile{
 		Point2D destination = new Point2D(direction.getX()+obj.getX(),direction.getY()+obj.getY());
 		return destination;
 	}
+
+	public Point2D add(Point2D direction, Vector2D obj){
+		Point2D destination = new Point2D(direction.getX()+obj.getX(),direction.getY()+obj.getY());
+		return destination;
+	}
+
+	public boolean floatsUp() {
+    return false;
+  }
 
 	@Override
 	public String toString(){

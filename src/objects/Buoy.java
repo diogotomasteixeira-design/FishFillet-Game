@@ -18,4 +18,10 @@ public class Buoy extends MovableObjects {
 	public int getLayer() {
 		return 1;
 	}
+
+	@Override
+  public boolean floatsUp() {
+    return true;
+	}
+
 }
