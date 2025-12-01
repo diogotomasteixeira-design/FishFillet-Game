@@ -81,7 +81,7 @@ public class GameEngine implements Observer {
 		ImageGUI.getInstance().update();
 	}
 
-	private void processTick() {		
+	private void processTick() {		 
 		lastTickProcessed++;
 
 		if(!BigFish.getInstance().getAliveStatus() || !SmallFish.getInstance().getAliveStatus()){
