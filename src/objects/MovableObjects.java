@@ -50,7 +50,6 @@ public abstract class MovableObjects extends GameObject {
     for (int y = 9; y >= 0; y--) {
       for (int x = 0; x < 10; x++) {
         for (GameObject obj : currentRoom.getObjectsAtPosition(new Point2D(x, y))) {
-
           if (obj instanceof MovableObjects mo) {
             if (mo.floatsUp()) {
               rising.add(mo); 
@@ -101,6 +100,10 @@ public abstract class MovableObjects extends GameObject {
       Point2D position = mo.getPosition();
       Point2D down = position.plus(new Vector2D(0, 1));
 
+      if(mo instanceof Krab krab){
+        krab.crabFall();
+      }
+
       List<GameObject> below = currentRoom.getObjectsAtPosition(down);
 
       boolean blocked = false;
@@ -116,6 +119,21 @@ public abstract class MovableObjects extends GameObject {
       }
     }
   }
+
+  public static void randomMoves(Room currentRoom){
+    for (int y = 9; y >= 0; y--) {
+      for (int x = 0; x < 10; x++) {
+        for (GameObject obj : currentRoom.getObjectsAtPosition(new Point2D(x, y))) {
+          if (obj.movesRandomly())
+            if(obj instanceof MovableObjects mo){
+            mo.move();
+          }
+        }
+      }
+    }
+  }
+
+  public void move(){}
 
 }
 

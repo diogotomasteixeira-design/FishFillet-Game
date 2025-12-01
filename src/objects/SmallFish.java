@@ -79,7 +79,7 @@ public class SmallFish extends GameCharacter {
 			return getPosition();
 		}
 
-		if (object.push(object.getPosition(), dirObj)) {return sendToDestination(destination);}
+		if (object.push(object.getPosition(), dirObj)){return sendToDestination(destination);}
 
     return getPosition();
 	}

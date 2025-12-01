@@ -11,6 +11,7 @@ import objects.BigFish;
 import objects.Bomb;
 import objects.GameCharacter;
 import objects.GameObject;
+import objects.Krab;
 import objects.MovableObjects;
 import pt.iscte.poo.gui.ImageGUI;
 import pt.iscte.poo.observer.Observed;
@@ -105,6 +106,7 @@ public class GameEngine implements Observer {
 
 		fishTurn.changeStatus(status);
 		fishTurn.move(pendingMovement.asVector());
+		MovableObjects.randomMoves(currentRoom);
 		
 		pendingMovement = null;
 	}
