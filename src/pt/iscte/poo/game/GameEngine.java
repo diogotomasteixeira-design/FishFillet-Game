@@ -28,6 +28,7 @@ public class GameEngine implements Observer {
 	private GameCharacter fishTurn;
 	private Direction pendingMovement = null;
 	private int currentLevel = 0;
+	private boolean tickIncreased = false;
 		
 	public GameEngine() {
 		rooms = new HashMap<String,Room>();
@@ -59,11 +60,8 @@ public class GameEngine implements Observer {
 			}
 
 			if (Direction.isSwitch(k)) {
-				if (fishTurn == SmallFish.getInstance()){
-					fishTurn = BigFish.getInstance();
-				}
-				else { fishTurn = SmallFish.getInstance();}
-				pendingMovement = null;
+			if(!(SmallFish.getInstance().getHasWon() || BigFish.getInstance().getHasWon())){swapTurn();}
+			pendingMovement = null;
 			}
 
 			try {
@@ -74,11 +72,13 @@ public class GameEngine implements Observer {
 		}
 
 		int t = ImageGUI.getInstance().getTicks();
+
 		while (lastTickProcessed < t) {
-			processTick();
+				processTick();
+				tickIncreased = true;
 		}
 
-		ImageGUI.getInstance().setStatusMessage("Good luck!              Time:" + getTime() + "                         SmallFishMoves: " + SmallFish.getInstance().getNumMoves() + " || BigFishMoves: " + BigFish.getInstance().getNumMoves());
+		ImageGUI.getInstance().setStatusMessage("Good luck! Room:"+currentLevel+"   Time:" + getTime() + "                SmallFishMoves: " + SmallFish.getInstance().getNumMoves() + " || BigFishMoves: " + BigFish.getInstance().getNumMoves());
 		ImageGUI.getInstance().update();
 	}
 
@@ -103,10 +103,16 @@ public class GameEngine implements Observer {
 		if (pendingMovement == null){return;}
 
 		int status = pendingMovement.asVector().getX();
-
+		Point2D currentPos = fishTurn.getPosition();
+		
 		fishTurn.changeStatus(status);
 		fishTurn.move(pendingMovement.asVector());
-		MovableObjects.randomMoves(currentRoom);
+
+		if(fishTurn.getHasWon()){swapTurn();}
+
+		Point2D endPos = fishTurn.getPosition();
+
+		if(!endPos.equals(currentPos)){MovableObjects.randomMoves(currentRoom);}
 		
 		pendingMovement = null;
 	}
@@ -142,7 +148,6 @@ public class GameEngine implements Observer {
 
     updateGUI();
 		String title = "Level " + currentLevel;
-    ImageGUI.getInstance().showMessage( title,"Good luck! º-º");
 	}
 
 	private void resetFishPositions() {
@@ -181,13 +186,17 @@ public class GameEngine implements Observer {
 
 	}
 
-
-
 	public String getTime(){
 		int totalSec = lastTickProcessed/10;
 		int minutes = totalSec/60;
 		int seconds = totalSec%60;
 		return String.format("%02d:%02d", minutes, seconds);
+	}
+
+	public void swapTurn(){
+		if (fishTurn == SmallFish.getInstance()){
+			fishTurn = BigFish.getInstance();
+		}else { fishTurn = SmallFish.getInstance();}
 	}
 }
 

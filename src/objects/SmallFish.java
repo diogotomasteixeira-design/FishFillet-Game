@@ -50,6 +50,8 @@ public class SmallFish extends GameCharacter {
 
 		GameObject object = getTopObj(destination);
 
+		if(object instanceof Krab){kill();}
+
 		if (object == null){return sendToDestination(destination);}
 
 		if (object.getWeight() == Weight.HOLE || object.getWeight() == Weight.TRAP){return sendToDestination(destination);}

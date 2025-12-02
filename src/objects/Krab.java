@@ -1,12 +1,13 @@
 package objects;
 
-import java.util.List;
 import java.util.Random;
 import pt.iscte.poo.game.Room;
 import pt.iscte.poo.utils.Point2D;
 import pt.iscte.poo.utils.Vector2D;
 
 public class Krab extends MovableObjects {
+
+	private int moves = 0;
 
 	public Krab(Room room) {
 		super(room);
@@ -35,37 +36,36 @@ public class Krab extends MovableObjects {
 		Point2D posBelow = add(getPosition(), new Vector2D(0,1));
 		if(room.getTopObj(posBelow) == null){return;}
 
-		int x = rand.nextInt(3)-1;
-		System.out.println(x);
-
-		if (x == 0){return;}
-
+		int x = rand.nextBoolean() ? 1 : -1;
+		
     Vector2D direction = new Vector2D(x,0);
 		Point2D destination = add(getPosition(),direction);
 
-		List<GameObject> destObj = getObjectsAt(destination);
-		for (GameObject obj : destObj){
+		GameObject destObj = getTopObj(destination);
 
-			if (obj.getWeight() == Weight.IMMOVABLE){move();}
-			
-			if (obj.getWeight() == Weight.TRAP) {
-        room.removeObject(this);
-        return;
-      }
-			if (obj instanceof SmallFish sf) {
-        sf.kill();
-        return;
-      }
-			if (obj instanceof BigFish) {
-        room.removeObject(this);
-        return;
-      }
-			if (obj.getWeight() != Weight.WATER && obj.getWeight() != Weight.HOLE) {
-        return;
-			}
+		if(destObj == null){
 			setPosition(destination);
+      return;
 		}
-  }
+			
+		if (destObj.getWeight() == Weight.TRAP) {
+      room.removeObject(this);
+      return;
+    }
+		if (destObj instanceof SmallFish sf) {
+      sf.kill();
+    }
+		if (destObj instanceof BigFish) {
+      room.removeObject(this);
+      return;
+    }
+
+		if (destObj.getWeight() != Weight.HOLE) {
+      return;
+		}
+		setPosition(destination);
+	}
+  
 
 	public void crabFall() {
 

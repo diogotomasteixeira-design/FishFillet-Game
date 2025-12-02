@@ -57,7 +57,6 @@ public class BigFish extends GameCharacter {
 		GameObject firstObj = getTopObj(destination);
 
 		if (firstObj == null){return sendToDestination(destination);}
-		System.out.println(firstObj.getName());
 
 		if (firstObj.getWeight() == Weight.HOLE){return getPosition();}
 

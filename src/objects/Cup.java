@@ -35,7 +35,7 @@ public class Cup extends MovableObjects {
 
     for (GameObject object : objectsAtDest) {
       if (object instanceof MovableObjects mo) {
-        if (!mo.tryPushChain(object.getPosition(), direction)) {
+        if (!mo.push(object.getPosition(), direction)) {
           return false;
         }
       }
