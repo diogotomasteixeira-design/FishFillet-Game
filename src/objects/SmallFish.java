@@ -13,6 +13,7 @@ public class SmallFish extends GameCharacter {
 		super(room);
 		currentStatus = -1;
 		numMoves = 0;
+		totalMoves = 0;
 		isAlive = true;
 	}
 

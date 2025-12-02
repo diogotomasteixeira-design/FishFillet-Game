@@ -113,9 +113,16 @@ public abstract class MovableObjects extends GameObject {
           break;
         }
       }
-
+      boolean pushed = false;
       if (!blocked) {
-        mo.push(position, new Vector2D(0, 1));
+        pushed = mo.push(position, new Vector2D(0, 1));
+      }
+      if (pushed && mo instanceof Bomb bo) {
+				GameObject landedOn = currentRoom.getTopObj(down.plus(new Vector2D(0,1)));
+        if (landedOn != null && !(landedOn instanceof SmallFish) && !(landedOn instanceof BigFish) && landedOn.getWeight() != Weight.WATER) {
+          bo.explode();
+          System.out.println("boom!");
+        }
       }
     }
   }
