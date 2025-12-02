@@ -28,9 +28,37 @@ public class GameEngine implements Observer {
 	private GameCharacter fishTurn;
 	private Direction pendingMovement = null;
 	private int currentLevel = 0;
-	private boolean tickIncreased = false;
+	private long levelStartTime;
+	private long totalStartTime;
+	private String playerName;
 		
 	public GameEngine() {
+		boolean valid = false;
+
+		while (!valid) {
+			try {
+				playerName = ImageGUI.getInstance().showInputDialog(
+					"Nome do jogador",
+					"Insere a tua Gamer Tag: "
+				);
+
+				if (playerName == null) {throw new NullPointerException("Cancel pressed");}
+
+				if (playerName.trim().isEmpty()) {
+					throw new IllegalArgumentException("Nome vazio");
+				}
+
+				valid = true;
+
+			} catch (NullPointerException e) {
+				ImageGUI.getInstance().dispose();
+				System.exit(0);
+
+			} catch (IllegalArgumentException e) {
+				ImageGUI.getInstance().showMessage("Erro", "Tens de inserir um nome válido!");
+			}
+		}
+		
 		rooms = new HashMap<String,Room>();
 		loadGame();
 		currentRoom = rooms.get("room" +currentLevel+ ".txt");
@@ -38,6 +66,9 @@ public class GameEngine implements Observer {
 		SmallFish.getInstance().setRoom(currentRoom);
 		BigFish.getInstance().setRoom(currentRoom);
 		fishTurn = SmallFish.getInstance();
+
+		totalStartTime = System.currentTimeMillis();
+		levelStartTime = System.currentTimeMillis();
 	}
 
 	private void loadGame() {
@@ -72,10 +103,8 @@ public class GameEngine implements Observer {
 		}
 
 		int t = ImageGUI.getInstance().getTicks();
-
 		while (lastTickProcessed < t) {
-				processTick();
-				tickIncreased = true;
+			processTick();
 		}
 
 		ImageGUI.getInstance().setStatusMessage("Good luck! Room:"+currentLevel+"   Time:" + getTime() + "                SmallFishMoves: " + SmallFish.getInstance().getNumMoves() + " || BigFishMoves: " + BigFish.getInstance().getNumMoves());
@@ -92,6 +121,22 @@ public class GameEngine implements Observer {
 
 		if (bothFishHaveWon()) {
 			ImageGUI.getInstance().showMessage("Victory!", "Level complete!");
+			long levelTime = (System.currentTimeMillis() - levelStartTime) / 1000;
+
+			ranking.score(
+				playerName,
+				currentLevel,
+				SmallFish.getInstance().getNumMoves(),
+				BigFish.getInstance().getNumMoves(),
+				SmallFish.getInstance().getDeaths(),
+				BigFish.getInstance().getDeaths(),
+				levelTime
+			);
+			showRankingLevel(levelTime);
+			levelStartTime = System.currentTimeMillis();
+			SmallFish.getInstance().resetDeaths();
+			BigFish.getInstance().resetDeaths();
+			
 			currentLevel++;
 			loadLevel(currentLevel);
 			return;
@@ -136,9 +181,22 @@ public class GameEngine implements Observer {
     Room next = rooms.get(resetRoom);
 
     if (next == null) {
-        ImageGUI.getInstance().showMessage("Fim de Jogo", "Acabaste todos os níveis!");
-        ImageGUI.getInstance().dispose();
-				System.exit(0);
+      long totalTime = (System.currentTimeMillis() - totalStartTime) / 1000;
+
+			ranking.score(
+				playerName,
+				100, // <-- Usa 100 para o score total das salas
+				SmallFish.getInstance().getTotalMoves(),
+				BigFish.getInstance().getTotalMoves(),
+				SmallFish.getInstance().getDeaths(),
+				BigFish.getInstance().getDeaths(),
+				totalTime
+			);
+
+			ImageGUI.getInstance().showMessage("Fim de Jogo", "Acabaste todos os níveis!");
+			showRankingGame(totalTime);
+			ImageGUI.getInstance().dispose();
+			System.exit(0);
     }
     currentRoom = next;
 
@@ -197,6 +255,65 @@ public class GameEngine implements Observer {
 		if (fishTurn == SmallFish.getInstance()){
 			fishTurn = BigFish.getInstance();
 		}else { fishTurn = SmallFish.getInstance();}
+	}
+
+	private void showRankingLevel(long totalTime) {
+
+    List<String> rankSala = ranking.getScoresForLevel(currentLevel);
+    rankSala = ranking.top5(rankSala);
+
+    String msg = "=== Ranking da Sala " + currentLevel + " ===\n\n";
+
+    for (String s : rankSala) {
+			String[] d = s.split(";");
+			msg += "Player: " + d[0]
+					+ " | SMov: " + d[2]
+					+ " | BMov: " + d[3]
+					+ " | SDeaths: " + d[4]
+					+ " | BDeaths: " + d[5]
+					+ " | Time: " + d[6] + "s\n";
+    }
+
+    msg += "\n--- O teu resultado ---\n";
+    msg += "Player: " + playerName
+        + " | SMov: " + SmallFish.getInstance().getNumMoves()
+        + " | BMov: " + BigFish.getInstance().getNumMoves()
+        + " | SDeaths: " + SmallFish.getInstance().getDeaths()
+        + " | BDeaths: " + BigFish.getInstance().getDeaths()
+        + " | Time: " + totalTime + "s\n";
+
+    ImageGUI.getInstance().showMessage("Ranking", msg);
+	}
+
+	private void showRankingGame(long totalTime) {
+
+		List<String> total = ranking.getFinalScores();
+		total = ranking.top5(total);
+
+
+		String msg = "=== Ranking FINAL ===\n\n";
+
+		msg +=  "--- Top 5 ---\n";
+
+		for (String s : total) {
+    String[] d = s.split(";");
+
+    msg += "Player: " + d[0]
+        + " | SMov: " + d[2]
+        + " | SDeaths: " + d[4]
+        + " | BDeaths: " + d[5]
+        + " | Time: " + d[6] + "s\n";
+}
+
+		msg += "\n--- O teu resultado ---\n";
+		msg += "Player: " + playerName
+			+ " | SMov: " + SmallFish.getInstance().getTotalMoves()
+			+ " | BMov: " + BigFish.getInstance().getTotalMoves()
+			+ " | SDeaths: " + SmallFish.getInstance().getTotalDeaths()
+			+ " | BDeaths: " + BigFish.getInstance().getTotalDeaths()
+			+ " | Time: " + totalTime + "s\n";
+
+		ImageGUI.getInstance().showMessage("Ranking", msg);
 	}
 }
 

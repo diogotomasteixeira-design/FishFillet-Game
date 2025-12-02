@@ -10,7 +10,10 @@ public abstract class GameCharacter extends GameObject {
 
 	protected boolean hasWon = false;
 	protected int numMoves;
+	protected int totalMoves;
 	protected boolean isAlive;
+	protected int deaths = 0;
+	protected int totalDeaths = 0;
 
 	public GameCharacter(Room room) {
 		super(room);
@@ -35,20 +38,34 @@ public abstract class GameCharacter extends GameObject {
 
 	public Point2D sendToDestination(Point2D destination){
 		numMoves++;
+		totalMoves++;
 		setPosition(destination);
 		return destination;
 	}
 
 	public void kill(){
 		isAlive = false;
+		deaths++;
 	}
 
 	public boolean getAliveStatus(){
 		return isAlive;
 	}
 
+	public int getDeaths(){
+		return deaths;
+	}
+
+	public int getTotalDeaths(){
+		return totalDeaths;
+	}
+
 	public int getNumMoves(){
 		return numMoves;
+	}
+
+	public int getTotalMoves(){
+		return totalMoves;
 	}
 
 	public boolean getHasWon(){
@@ -60,12 +77,18 @@ public abstract class GameCharacter extends GameObject {
 	}
 
   public void resetMoves() {
+		totalMoves += numMoves;
     numMoves = 0;
   }
 
 	public void resetAliveStatus() {
     isAlive = true;
   }
+
+	public void resetDeaths(){
+		totalDeaths += deaths;
+		deaths = 0;
+	}
 
 	public abstract void changeStatus(int x);
 }

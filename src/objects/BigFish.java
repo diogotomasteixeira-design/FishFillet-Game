@@ -13,6 +13,7 @@ public class BigFish extends GameCharacter {
 	private BigFish(Room room) {
 		super(room);
 		numMoves = 0;
+		totalMoves = 0;
 		currentStatus = -1;
 		isAlive = true;
 	}
