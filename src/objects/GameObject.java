@@ -111,6 +111,10 @@ public abstract class GameObject implements ImageTile{
     return false;
   }
 
+	public boolean movesRandomly(){
+    return false;
+  }
+
 	@Override
 	public String toString(){
 		return getName();
