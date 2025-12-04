@@ -7,11 +7,10 @@ import pt.iscte.poo.utils.Vector2D;
 
 public class Krab extends MovableObjects {
 
-	private int moves = 0;
-
 	public Krab(Room room) {
 		super(room);
 		weight = Weight.HEAVY;
+		movesRandomly = true;
 	}
 
 	@Override

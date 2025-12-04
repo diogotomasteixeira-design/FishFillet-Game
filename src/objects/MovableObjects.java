@@ -128,19 +128,22 @@ public abstract class MovableObjects extends GameObject {
   }
 
   public static void randomMoves(Room currentRoom){
+
+    List<GameObject> movables  = new ArrayList<>();
+
     for (int y = 9; y >= 0; y--) {
       for (int x = 0; x < 10; x++) {
         for (GameObject obj : currentRoom.getObjectsAtPosition(new Point2D(x, y))) {
-          if (obj.movesRandomly())
-            if(obj instanceof MovableObjects mo){
-            mo.move();
+          if(obj.getMovesRandomly()){
+            movables.add(obj);
           }
         }
       }
     }
+
+    for (GameObject object : movables) {
+      object.move();
+    }
   }
-
-  public void move(){}
-
 }
 

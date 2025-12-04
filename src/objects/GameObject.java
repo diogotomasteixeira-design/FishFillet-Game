@@ -11,6 +11,7 @@ public abstract class GameObject implements ImageTile{
 	protected Point2D position;
 	protected Room room;
 	protected Weight weight = Weight.IMMOVABLE;
+	protected boolean movesRandomly = false;
 	
 	public GameObject(Room room) {
 		this.room = room;
@@ -44,6 +45,10 @@ public abstract class GameObject implements ImageTile{
 
 	public Weight getWeight(){
 		return weight;
+	}
+
+	public boolean getMovesRandomly(){
+		return movesRandomly;
 	}
 
 	public List<GameObject> getObjectsAt(Point2D pos) {
@@ -115,6 +120,8 @@ public abstract class GameObject implements ImageTile{
     return false;
   }
 
+	public void move(){}
+	
 	@Override
 	public String toString(){
 		return getName();

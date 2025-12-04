@@ -144,7 +144,6 @@ public class GameEngine implements Observer {
 		
 		if (lastTickProcessed % 10 == 0){MovableObjects.gravity(currentRoom);}
 
-
 		if (pendingMovement == null){return;}
 
 		int status = pendingMovement.asVector().getX();
