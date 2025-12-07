@@ -15,7 +15,11 @@ public abstract class MovableObjects extends GameObject {
   @Override
 	public boolean push(Point2D position, Vector2D direction){
 		if (tryPushChain(position, direction)){
+
 			setPosition(position.plus(direction));
+      if (this instanceof Stone stone && direction.getX() != 0) {
+        stone.spawnKrab();
+      }
 			return true;
 		}
 		return false;
@@ -42,6 +46,7 @@ public abstract class MovableObjects extends GameObject {
     return true;
   }
 
+  // Aplica a gravidade e o efeito de subida nos objetos móveis
   public static void gravity(Room currentRoom) {
 
     List<MovableObjects> falling = new ArrayList<>();
@@ -121,12 +126,26 @@ public abstract class MovableObjects extends GameObject {
 				GameObject landedOn = currentRoom.getTopObj(down.plus(new Vector2D(0,1)));
         if (landedOn != null && !(landedOn instanceof SmallFish) && !(landedOn instanceof BigFish) && landedOn.getWeight() != Weight.WATER) {
           bo.explode();
-          System.out.println("boom!");
         }
       }
     }
+    
+    BigFish big = BigFish.getInstance();
+
+    if (big.getAliveStatus()) {
+      Vector2D wc = countAboveFish(big.getPosition(), currentRoom, big);
+      if (wc.getY() >= 2){big.kill();}
+    }
+
+    SmallFish small = SmallFish.getInstance();
+
+    if (small.getAliveStatus()) {
+      Vector2D wc = countAboveFish(small.getPosition(), currentRoom, big);
+      if (wc.getX() > 1 || wc.getY() != 0){small.kill();}
+    }
   }
 
+  // Faz os objetos que se movem aleatoriamente realizarem seus movimentos  
   public static void randomMoves(Room currentRoom){
 
     List<GameObject> movables  = new ArrayList<>();
@@ -145,5 +164,39 @@ public abstract class MovableObjects extends GameObject {
       object.move();
     }
   }
-}
 
+  // Conta o número de objetos leves e pesados em cima dos peixes
+  public static Vector2D countAboveFish(Point2D fishPos, Room room, GameObject fish) {
+
+    Vector2D weightCount = new Vector2D(0,0); //x-lightCount y-heavyCount
+    Point2D checkPos = fishPos.plus(new Vector2D(0, -1));
+
+    while (checkPos.getY() >= 0) {
+
+        List<GameObject> objAtPos = room.getObjectsAtPosition(checkPos);
+        boolean foundMovable = false;
+
+        for (GameObject obj : objAtPos) {
+
+            if (obj == fish) continue;
+            if (obj instanceof MovableObjects mo) {
+                foundMovable = true;
+
+                if (mo.getWeight() == Weight.HEAVY) {
+                  weightCount = weightCount.plus(new Vector2D(0,1));
+                }
+                else{
+                  weightCount = weightCount.plus(new Vector2D(1,0));
+                }
+            }
+        }
+
+        if (!foundMovable) break;
+
+        checkPos = checkPos.plus(new Vector2D(0, -1));
+    }
+
+    return weightCount;
+  }
+
+}

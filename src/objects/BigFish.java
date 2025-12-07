@@ -18,6 +18,7 @@ public class BigFish extends GameCharacter {
 		isAlive = true;
 	}
 
+	
 	public static BigFish getInstance() {
 		return bf;
 	}
@@ -88,7 +89,6 @@ public class BigFish extends GameCharacter {
       if (currentObj.getWeight() == Weight.HEAVY) {
         numHeavyPushed++;
         if (numHeavyPushed > 1) {
-					kill();
           return getPosition(); 
         }
       }

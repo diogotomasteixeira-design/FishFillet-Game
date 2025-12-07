@@ -11,7 +11,13 @@ public class Krab extends MovableObjects {
 		super(room);
 		weight = Weight.HEAVY;
 		movesRandomly = true;
+		justSpawned = true;
 	}
+
+	// Define se o Krab acabou de spawnar
+  public void setJustSpawned(boolean value) {
+    justSpawned = value;
+  }
 
 	@Override
 	public String getName() {
@@ -30,6 +36,10 @@ public class Krab extends MovableObjects {
 
 	@Override
 	public void move(){
+		if (justSpawned){
+			setJustSpawned(false);
+			return;
+		}
 		Random rand = new Random();
 
 		Point2D posBelow = add(getPosition(), new Vector2D(0,1));
@@ -64,8 +74,8 @@ public class Krab extends MovableObjects {
 		}
 		setPosition(destination);
 	}
-  
 
+	// Faz o Krab cair verticalmente se não houver obstáculos
 	public void crabFall() {
 
     Point2D down = getPosition().plus(new Vector2D(0, 1));

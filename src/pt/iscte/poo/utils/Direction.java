@@ -16,14 +16,17 @@ public enum Direction implements Serializable {
 
 	private Vector2D vector;
 
+	// Inicializa a direção com o vetor correspondente
 	Direction(Vector2D vector) {
 		this.vector = vector;
 	}
-	
+
+	// Retorna o vetor associado à direção
 	public Vector2D asVector() {
 		return vector;
 	}
-	
+
+	// Retorna a direção associada a uma tecla pressionada
 	public static Direction directionFor(int keyCode) {
 		switch(keyCode){
 			case KeyEvent.VK_SPACE:
@@ -43,10 +46,12 @@ public enum Direction implements Serializable {
 		throw new IllegalArgumentException();
 	}
 
+	// Verifica se a tecla é uma direção
 	public static boolean isDirection(int lastKeyPressed) {		
 		return lastKeyPressed >= KeyEvent.VK_LEFT && lastKeyPressed <= KeyEvent.VK_DOWN;  			
 	}
 
+	// Retorna a direção oposta
 	public Direction opposite() {
 		switch (this) {
 			case UP: return DOWN;
@@ -55,23 +60,27 @@ public enum Direction implements Serializable {
 			default: return LEFT;
 		}
 	}
-	
+
+	// Retorna uma direção aleatória
 	public static Direction random() {
 		Random generator = new Random();
 		return values()[generator.nextInt(values().length)];
 	}
-	
+
+	// Retorna a direção correspondente a um vetor
 	public static Direction forVector(Vector2D v) {
 		for (Direction d : values())
 			if (v.equals(d.asVector()))
 				return d;
 		throw new IllegalArgumentException();	
 	}
-	
+
+	// Verifica se a tecla é a de troca de personagem (SPACE)
 	public static boolean isSwitch(int k){
 		return k == (KeyEvent.VK_SPACE);
 	}
 
+	// Verifica se a tecla é a de reiniciar o jogo (R)
 	public static boolean isRestart(int k){
 		return k == (KeyEvent.VK_R);
 	}

@@ -20,8 +20,8 @@ public class Bomb extends MovableObjects {
 		return 1;
 	}
 
+	// Remove objetos adjacentes e mata peixes se forem atingidos
 	public void explode() {
-    System.out.println("b");
 
     int[][] offsets = {{0, -1},{0,  1},{-1, 0},{1,  0}};
 
@@ -31,7 +31,6 @@ public class Bomb extends MovableObjects {
 
         if (object != null) {
           room.removeObject(object);
-          System.out.println("boom");
 					if( object instanceof BigFish){
 						BigFish.getInstance().kill();
 					}

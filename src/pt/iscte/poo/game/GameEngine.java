@@ -4,21 +4,15 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import objects.SmallFish;
-import objects.Weight;
 import objects.BigFish;
-import objects.Bomb;
 import objects.GameCharacter;
-import objects.GameObject;
-import objects.Krab;
 import objects.MovableObjects;
+import objects.SmallFish;
 import pt.iscte.poo.gui.ImageGUI;
 import pt.iscte.poo.observer.Observed;
 import pt.iscte.poo.observer.Observer;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
-import pt.iscte.poo.utils.Vector2D;
 
 public class GameEngine implements Observer {
 	
@@ -31,7 +25,8 @@ public class GameEngine implements Observer {
 	private long levelStartTime;
 	private long totalStartTime;
 	private String playerName;
-		
+
+	// Inicializa o jogo, pede o nome do jogador e carrega o primeiro nível.
 	public GameEngine() {
 		boolean valid = false;
 
@@ -69,8 +64,10 @@ public class GameEngine implements Observer {
 
 		totalStartTime = System.currentTimeMillis();
 		levelStartTime = System.currentTimeMillis();
+		loadLevel(0);
 	}
 
+	// Carrega todos os ficheiros de rooms e armazena no mapa de rooms.
 	private void loadGame() {
 		File[] files = new File("./rooms").listFiles();
 		for(File f : files) {
@@ -78,6 +75,7 @@ public class GameEngine implements Observer {
 		}
 	}
 
+	// Verifica teclas, processa ticks e atualiza a GUI.
 	@Override
 	public void update(Observed source) {
 
@@ -85,6 +83,8 @@ public class GameEngine implements Observer {
 			int k = ImageGUI.getInstance().keyPressed();
 
 			if (Direction.isRestart(k)){
+				BigFish.getInstance().kill();
+				SmallFish.getInstance().kill();
 				ImageGUI.getInstance().showMessage("Restart","Game Restarted");
 				loadLevel(currentLevel);
 				return;
@@ -111,6 +111,7 @@ public class GameEngine implements Observer {
 		ImageGUI.getInstance().update();
 	}
 
+	// Atualiza o estado do jogo a cada tick, movimentos e gravidade.
 	private void processTick() {		 
 		lastTickProcessed++;
 
@@ -161,6 +162,7 @@ public class GameEngine implements Observer {
 		pendingMovement = null;
 	}
 
+	// Atualiza a GUI mostrando todos os objetos da sala atual.
 	public void updateGUI() {
 		if(currentRoom!=null) {
 			ImageGUI.getInstance().clearImages();
@@ -168,10 +170,12 @@ public class GameEngine implements Observer {
 		}
 	}
 
+	// Retorna true se ambos os peixes completaram o nível.
 	public boolean bothFishHaveWon(){
 		return SmallFish.getInstance().getHasWon() && BigFish.getInstance().getHasWon();
 	}
-	
+
+	// Carrega um nível específico e reseta os objetos e peixes.
 	private void loadLevel(int level) {
 		
 		String resetRoom = "room" + level + ".txt";
@@ -207,6 +211,7 @@ public class GameEngine implements Observer {
 		String title = "Level " + currentLevel;
 	}
 
+	// Reseta posições, movimentos e estado de vida dos peixes.
 	private void resetFishPositions() {
 
     Point2D sfPos = currentRoom.getSmallFishStartingPosition();
@@ -243,6 +248,7 @@ public class GameEngine implements Observer {
 
 	}
 
+	// Retorna o tempo decorrido do jogo em formato MM:SS.
 	public String getTime(){
 		int totalSec = lastTickProcessed/10;
 		int minutes = totalSec/60;
@@ -250,12 +256,14 @@ public class GameEngine implements Observer {
 		return String.format("%02d:%02d", minutes, seconds);
 	}
 
+	// Alterna a vez entre SmallFish e BigFish.
 	public void swapTurn(){
 		if (fishTurn == SmallFish.getInstance()){
 			fishTurn = BigFish.getInstance();
 		}else { fishTurn = SmallFish.getInstance();}
 	}
 
+	// Mostra o ranking do nível atual e o resultado do jogador.
 	private void showRankingLevel(long totalTime) {
 
     List<String> rankSala = ranking.getScoresForLevel(currentLevel);
@@ -284,6 +292,7 @@ public class GameEngine implements Observer {
     ImageGUI.getInstance().showMessage("Ranking", msg);
 	}
 
+	// Mostra o ranking final de todos os níveis e o resultado do jogador.
 	private void showRankingGame(long totalTime) {
 
 		List<String> total = ranking.getFinalScores();

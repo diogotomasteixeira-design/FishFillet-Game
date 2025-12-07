@@ -20,29 +20,35 @@ public class Point2D implements Serializable { // Added 23-Apr-2018
 	private final int x;
 	private final int y;
 
+	// Construtor com coordenadas x e y
 	public Point2D(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
+	// Construtor a partir de um java.awt.Point
 	public Point2D(Point point) {
 		x = point.x;
 		y = point.y;
 	}
 
+	// Construtor a partir de um java.awt.geom.Point2D
 	public Point2D(java.awt.geom.Point2D point) {
 		x = (int)point.getX();
 		y = (int)point.getY();
 	}
 
+	// Retorna a coordenada x
 	public int getX() {
 		return x;
 	}
 
+	// Retorna a coordenada y
 	public int getY() {
 		return y;
 	} 
 
+	// Gera o hash code baseado em x e y
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -52,6 +58,7 @@ public class Point2D implements Serializable { // Added 23-Apr-2018
 		return result;
 	}
 
+	// Compara dois pontos para igualdade
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -68,15 +75,18 @@ public class Point2D implements Serializable { // Added 23-Apr-2018
 		return true;
 	}
 
+	// Soma um vetor ao ponto e retorna novo ponto
 	@Override
 	public String toString() {
 		return "(" + x + ", " + y + ")";
 	}
 
+	// Soma um vetor ao ponto e retorna novo ponto
 	public Point2D plus(Vector2D v) {
 		return new Point2D(x + v.getX(), y + v.getY());
 	}
 
+	// Retorna os pontos vizinhos nas 4 direções cardinais
 	public List<Point2D> getNeighbourhoodPoints() {
 		
 		List<Point2D> neighbours = new ArrayList<>();
@@ -89,6 +99,7 @@ public class Point2D implements Serializable { // Added 23-Apr-2018
 		return neighbours;
 	}
 
+	// Lê um ponto do scanner no formato "(x, y)"
 	public static Point2D readFrom(Scanner in) {
 		String s = in.next();
 		int x = Integer.valueOf((s.substring(1, s.length() - 1)));
@@ -97,10 +108,12 @@ public class Point2D implements Serializable { // Added 23-Apr-2018
 		return new Point2D(x, y);
 	}
 
+	// Converte o ponto para string para escrita
 	public String writeTo(PrintWriter out) {		
 		return this.toString();
 	}
 	
+	// Retorna lista de pontos formando um retângulo à frente numa direção
 	public List<Point2D> getFrontRect(Direction d, int rect_width, int rect_height) {
 		
 		List<Vector2D> frontRectVecs = new ArrayList<>();
@@ -122,7 +135,7 @@ public class Point2D implements Serializable { // Added 23-Apr-2018
 	}
 	
 	// added 28-Nov-2021
-	
+	// Retorna pontos vizinhos incluindo diagonais
 	public List<Point2D> getWideNeighbourhoodPoints() {
 		
 		List<Point2D> neighbours = new ArrayList<>();
@@ -136,6 +149,7 @@ public class Point2D implements Serializable { // Added 23-Apr-2018
 		return neighbours;
 	}
 	
+	// Calcula vetor unitário para outro ponto
 	public Vector2D vectorTo(Point2D p) {
 		
 		int dx = p.getX() - x;
@@ -147,18 +161,22 @@ public class Point2D implements Serializable { // Added 23-Apr-2018
 		return new Vector2D(0, Integer.signum(dy));	
 	}
 	
+	// Retorna a direção cardinal para outro ponto
 	public Direction directionTo(Point2D p) {		
 		return Direction.forVector(vectorTo(p));
 	}
 
+	// Calcula distância de Manhattan para outro ponto
 	public int distanceTo(Point2D p) {
 		return Math.abs(p.getX() - x) + Math.abs(p.getY() - y);
 	}
 
+	// Soma largura e altura de uma dimensão ao ponto
 	public Point2D plus(Dimension d) {
 		return new Point2D(x + d.width, y + d.height);
 	}
 
+	// Subtrai largura e altura de uma dimensão ao ponto
 	public Point2D minus(Dimension d) {
 		return new Point2D(x - d.width, y - d.height);
 	}

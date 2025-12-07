@@ -34,56 +34,71 @@ public class Room {
 	private Point2D bigFishStartingPosition;
 	private List<MovableObjects> MObjects = new ArrayList<>();
 	
+	// Inicializa a lista de objetos da sala.
 	public Room() {
 		objects = new ArrayList<GameObject>();
 	}
 
+	// Define o nome da sala.
 	private void setName(String name) {
 		roomName = name;
 	}
 	
+	// Retorna o nome da sala.
 	public String getName() {
 		return roomName;
 	}
 	
+	// Associa o motor de jogo à sala.
 	private void setEngine(GameEngine engine) {
 		this.engine = engine;
 	}
 
+	// Adiciona um objeto à sala e atualiza a GUI.
 	public void addObject(GameObject obj) {
-		objects.add(obj);
-		engine.updateGUI();
+		if (!objects.contains(obj)) {
+      objects.add(obj);
+      engine.updateGUI();
+    }
 	}
-	
+
+	// Remove um objeto da sala e atualiza a GUI.
 	public void removeObject(GameObject obj) {
 		objects.remove(obj);
 		engine.updateGUI();
 	}
 	
+	// Retorna a lista de objetos da sala.
 	public List<GameObject> getObjects() {
 		return objects;
 	}
 
+	// Define a posição inicial do SmallFish.
 	public void setSmallFishStartingPosition(Point2D heroStartingPosition) {
 		this.smallFishStartingPosition = heroStartingPosition;
 	}
 	
+	// Retorna a posição inicial do SmallFish.
 	public Point2D getSmallFishStartingPosition() {
 		return smallFishStartingPosition;
 	}
 	
+	// Define a posição inicial do BigFish.
 	public void setBigFishStartingPosition(Point2D heroStartingPosition) {
 		this.bigFishStartingPosition = heroStartingPosition;
 	}
 	
+	// Retorna a posição inicial do BigFish.
 	public Point2D getBigFishStartingPosition() {
 		return bigFishStartingPosition;
 	}
 
+	// Adiciona um objeto móvel à lista de objetos móveis da sala.
 	public void setMObjects(MovableObjects obj){
 		MObjects.add(obj);
 	}
 	
+	// Lê um ficheiro de sala, cria objetos correspondentes e retorna a sala.
 	public static Room readRoom(File f, GameEngine engine) {
 		Room r = new Room();
 		r.setEngine(engine);
@@ -210,6 +225,7 @@ public class Room {
 		return r;
 	}
 
+	// Retorna todos os objetos na posição especificada.
 	public List<GameObject> getObjectsAtPosition(Point2D position){
 		
 		List<GameObject> list = new ArrayList<>();
@@ -220,7 +236,7 @@ public class Room {
 		}
 		return list;
 	}
-
+	// Retorna o primeiro objeto visível na posição especificada (não água).
 	public GameObject getTopObj(Point2D position){
 		GameObject object = null;
 		for (GameObject obj : getObjectsAtPosition(position)) {

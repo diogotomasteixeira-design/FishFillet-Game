@@ -17,6 +17,7 @@ public class SmallFish extends GameCharacter {
 		isAlive = true;
 	}
 
+	// Retorna o singleton do SmallFish
 	public static SmallFish getInstance() {
 		return sf;
 	}

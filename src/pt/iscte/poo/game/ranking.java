@@ -14,12 +14,14 @@ public class ranking {
 
   private static String file = "ranking.txt";
 
+  // Regista um score no ficheiro de ranking
   public static void score(String player, int level, int smallMoves, int bigMoves, int smallDeaths, int bigDeaths, long totalTime){
     try (PrintWriter pw = new PrintWriter(new FileWriter(file,true))){
       pw.println(player + ";" + level + ";" + smallMoves + ";" + bigMoves + ";" + smallDeaths + ";" + bigDeaths + ";" + totalTime);
     } catch (IOException e) {e.printStackTrace();}
   }
 
+  // Retorna todos os scores do ficheiro
   public static List<String> getScores() {
     List<String> scores = new ArrayList<>();
     
@@ -31,6 +33,7 @@ public class ranking {
     return scores;
   }
 
+  // Retorna os scores filtrados por nível e ordenados
   public static List<String> getScoresForLevel(int level) {
     List<String> result = new ArrayList<>();
 
@@ -65,6 +68,7 @@ public class ranking {
     return result;
   }
 
+  // Retorna os 5 melhores scores da lista
   public static List<String> top5(List<String> list) {
     if (list == null){
       return new ArrayList<>();
@@ -72,11 +76,14 @@ public class ranking {
     return list.size() <= 5 ? new ArrayList<>(list) : new ArrayList<>(list.subList(0, 5));
   }
 
-    public static List<String> getFinalScores() {
+  // Retorna os scores finais somando todos os níveis
+  public static List<String> getFinalScores() {
         return getScoresForLevel(100); //100 é para a soma das resultados de todos os níveis
     }
 
   public static class ScoreComparator implements Comparator<String> {  
+
+    // Compara dois scores por tempo e número de movimentos
     @Override
     public int compare(String s1, String s2) {
       long time1 = getTimeFromScore(s1);
@@ -91,6 +98,7 @@ public class ranking {
       return Long.compare(moves1, moves2);
     }
 
+    // Extrai o tempo de um score
     private static long getTimeFromScore(String score) {
       String[] d = score.split(";");
       try {
@@ -100,6 +108,7 @@ public class ranking {
       }
     }
 
+    // Calcula a soma dos movimentos do jogador num score
     private static long getTotalMovesFromScore(String score) {
       String[] d = score.split(";");
 
@@ -114,5 +123,3 @@ public class ranking {
     }
   }
 }
-
-
